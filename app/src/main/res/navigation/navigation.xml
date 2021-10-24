@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation.xml"
+    app:startDestination="@id/nested_graph">
+
+    <navigation
+        android:id="@+id/nested_graph"
+        app:startDestination="@id/fruitListFragment">
+        <fragment
+            android:id="@+id/fruitListFragment"
+            android:name="com.luizalberto.recyclerviewfragment.view.FruitListFragment"
+            android:label="@string/title_fruit_list_fragment">
+            <action
+                android:id="@+id/action_fruitListFragment_to_fruitDetailFragment"
+                app:destination="@id/fruitDetailFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/fruitDetailFragment"
+            android:name="com.luizalberto.recyclerviewfragment.view.FruitDetailFragment"
+            android:label="@string/title_fruit_detail_fragment">
+        </fragment>
+    </navigation>
+</navigation>
