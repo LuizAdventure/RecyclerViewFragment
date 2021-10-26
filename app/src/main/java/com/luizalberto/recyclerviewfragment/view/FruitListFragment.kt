@@ -5,14 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.luizalberto.recyclerviewfragment.R
-import com.luizalberto.recyclerviewfragment.model.Fruit
 import com.luizalberto.recyclerviewfragment.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+
 
 @AndroidEntryPoint
 class FruitListFragment : Fragment() {
@@ -28,19 +29,22 @@ class FruitListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_fruit_list, container, false)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.item_list)
 
-        viewModel.getFruits().observe(viewLifecycleOwner, Observer<List<Fruit>>{ fruits ->
-            recyclerView.adapter = FruitListAdapter(fruits.sortedBy { it.id }) {
-                viewModel.select(it)
-                findNavController().navigate(R.id.action_fruitListFragment_to_fruitDetailFragment)
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.getFruits().collect { fruits ->
+                recyclerView.adapter = FruitListAdapter(fruits.sortedBy { it.id }) {
+                    viewModel.select(it)
+                    findNavController().navigate(R.id.action_fruitListFragment_to_fruitDetailFragment)
+                }
             }
-        })
 
+
+        }
         return view
     }
-
 }
+

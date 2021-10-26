@@ -5,7 +5,10 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.luizalberto.recyclerviewfragment.data.repository.Repository
 import com.luizalberto.recyclerviewfragment.model.Fruit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+
 
 class MainViewModel @ViewModelInject constructor(
     private val repository: Repository
@@ -15,9 +18,9 @@ class MainViewModel @ViewModelInject constructor(
 
     private val selected = MutableLiveData<Fruit>()
 
-    fun getFruits(): LiveData<List<Fruit>> {
+    fun getFruits(): Flow<List<Fruit>> {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.refreshFruits()
         }
 

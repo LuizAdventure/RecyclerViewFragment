@@ -7,16 +7,15 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 class AppModule {
-
 
 
     @Provides
@@ -31,15 +30,16 @@ class AppModule {
 
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(
-        ApiService::class.java)
+        ApiService::class.java
+    )
 
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase = AppDatabase.getDatabase(appContext)
+    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase =
+        AppDatabase.getDatabase(appContext)
 
-    @Singleton
+
     @Provides
-    fun provideFruitDao(db: AppDatabase) = db.FruitDao()
-
+    fun provideFruitDao(appDatabase: AppDatabase) = appDatabase.FruitDao()
 }
 
