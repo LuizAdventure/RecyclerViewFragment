@@ -1,22 +1,29 @@
 package com.luizalberto.recyclerviewfragment.data.repository
 
-import androidx.lifecycle.LiveData
+
+
+
+
 import com.luizalberto.recyclerviewfragment.api.ApiService
 import com.luizalberto.recyclerviewfragment.data.local.FruitDao
 import com.luizalberto.recyclerviewfragment.model.Fruit
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
 import javax.inject.Inject
 
-class Repository @Inject constructor(
+class FruitRepository @Inject constructor(
     private val apiService: ApiService,
     private val fruitDao: FruitDao
 ) {
-
-    fun getFruits(): LiveData<List<Fruit>> {
-        return  fruitDao.getAllFruits()
+    fun getFruits(): Flow<List<Fruit>> {
+        return flow{
+            fruitDao.getAllFruits()
+        }
     }
 
     suspend fun refreshFruits() {
-        apiService.getFruits().also { fruitDao.insertAllFruits(it) }
+        apiService.fetchFruits().also { fruitDao.insertAllFruits(it) }
     }
 
 }
